@@ -1,3 +1,6 @@
+# - DOWNLOAD https://nmap.org/dist/nmap-7.91-win32.zip
+# - EXTRACT INTO /ncat
+
 #
 # INTRODUCTION
 #
@@ -117,10 +120,10 @@ clean-localnet:
 build: seednode/build desktop/build
 
 seednode/build:
-	./gradlew :seednode:build
+	echo ./gradlew :seednode:build
 
 desktop/build:
-	./gradlew :desktop:build
+	echo ./gradlew :desktop:build
 
 # Unpack and customize a Bitcoin regtest node and Alice and Bob Bisq
 # nodes that have been preconfigured with a blockchain containing the
@@ -176,90 +179,37 @@ undeploy:
 	# quit all screen windows which results in killing the session
 	screen -S localnet -X at "#" kill
 
+start-be: bitcoind seednode seednode2
+
+start: start-be alice mediator
+	#sleep 10
+	#make block
+
 bitcoind: .localnet
-	bitcoind \
-		-regtest \
-		-prune=0 \
-		-txindex=1 \
-		-peerbloomfilters=1 \
-		-server \
-		-rpcuser=bisqdao \
-		-rpcpassword=bsq \
-		-datadir=.localnet/bitcoind \
-		-blocknotify='.localnet/bitcoind/blocknotify %s'
+	cmd.exe /C 'start cmd.exe /C powershell.exe -Command $$Host.UI.RawUI.WindowTitle = "bitcoind";make-bitcoind.cmd'
 
 seednode: seednode/build
-	./bisq-seednode \
-		--baseCurrencyNetwork=BTC_REGTEST \
-		--useLocalhostForP2P=true \
-		--useDevPrivilegeKeys=true \
-		--fullDaoNode=true \
-		--rpcUser=bisqdao \
-		--rpcPassword=bsq \
-		--rpcBlockNotificationPort=5120 \
-		--nodePort=2002 \
-		--userDataDir=.localnet \
-		--appName=seednode
+	cmd.exe /C 'start cmd.exe /C powershell.exe -Command $$Host.UI.RawUI.WindowTitle = "seednode";bisq-seednode.bat --baseCurrencyNetwork=BTC_REGTEST --useLocalhostForP2P=true --useDevPrivilegeKeys=true --fullDaoNode=true --rpcUser=bisqdao --rpcPassword=bsq --rpcBlockNotificationPort=5120 --nodePort=2002 --userDataDir=.localnet --appName=seednode'
 
 seednode2: seednode/build
-	./bisq-seednode \
-		--baseCurrencyNetwork=BTC_REGTEST \
-		--useLocalhostForP2P=true \
-		--useDevPrivilegeKeys=true \
-		--fullDaoNode=true \
-		--rpcUser=bisqdao \
-		--rpcPassword=bsq \
-		--rpcBlockNotificationPort=5121 \
-		--nodePort=3002 \
-		--userDataDir=.localnet \
-		--appName=seednode2
+	cmd.exe /C 'start cmd.exe /C powershell.exe -Command $$Host.UI.RawUI.WindowTitle = "seednode2";bisq-seednode.bat --baseCurrencyNetwork=BTC_REGTEST --useLocalhostForP2P=true --useDevPrivilegeKeys=true --fullDaoNode=true --rpcUser=bisqdao --rpcPassword=bsq --rpcBlockNotificationPort=5121 --nodePort=3002 --userDataDir=.localnet --appName=seednode2'
 
 mediator: desktop/build
-	./bisq-desktop \
-		--baseCurrencyNetwork=BTC_REGTEST \
-		--useLocalhostForP2P=true \
-		--useDevPrivilegeKeys=true \
-		--nodePort=4444 \
-		--appDataDir=.localnet/mediator \
-		--appName=Mediator
+	cmd.exe /C 'start cmd.exe /C powershell.exe -Command $$Host.UI.RawUI.WindowTitle = "mediator";bisq-desktop.bat --baseCurrencyNetwork=BTC_REGTEST --useLocalhostForP2P=true --useDevPrivilegeKeys=true --nodePort=4444 --appDataDir=.localnet/mediator --appName=Mediator --useDevModeHeader=true'
 
 alice: setup
-	./bisq-desktop \
-		--baseCurrencyNetwork=BTC_REGTEST \
-		--useLocalhostForP2P=true \
-		--useDevPrivilegeKeys=true \
-		--nodePort=5555 \
-		--fullDaoNode=true \
-		--rpcUser=bisqdao \
-		--rpcPassword=bsq \
-		--rpcBlockNotificationPort=5122 \
-		--genesisBlockHeight=111 \
-		--genesisTxId=30af0050040befd8af25068cc697e418e09c2d8ebd8d411d2240591b9ec203cf \
-		--appDataDir=.localnet/alice \
-		--appName=Alice
+	cmd.exe /C 'start cmd.exe /C color f0 ^& powershell.exe -Command $$Host.UI.RawUI.WindowTitle = "alice";bisq-desktop.bat --baseCurrencyNetwork=BTC_REGTEST --useLocalhostForP2P=true --useDevPrivilegeKeys=true --nodePort=5555 --fullDaoNode=true --rpcUser=bisqdao --rpcPassword=bsq --rpcBlockNotificationPort=5122 --genesisBlockHeight=111 --genesisTxId=30af0050040befd8af25068cc697e418e09c2d8ebd8d411d2240591b9ec203cf --appDataDir=.localnet/alice --appName=Alice'
 
 bob: setup
-	./bisq-desktop \
-		--baseCurrencyNetwork=BTC_REGTEST \
-		--useLocalhostForP2P=true \
-		--useDevPrivilegeKeys=true \
-		--nodePort=6666 \
-		--appDataDir=.localnet/bob \
-		--appName=Bob
+	cmd.exe /C 'start cmd.exe /C color f0 ^& powershell.exe -Command $$Host.UI.RawUI.WindowTitle = "bob";bisq-desktop.bat --baseCurrencyNetwork=BTC_REGTEST --useLocalhostForP2P=true --useDevPrivilegeKeys=true --nodePort=6666 --appDataDir=.localnet/bob --appName=Bob'
+
+mybuild:
+	powershell.exe ./bisq-desktop.bat --appDataDir=.localnet/mybuild --appName=mybuild --useDevModeHeader=true
 
 # Generate a new block on your Bitcoin regtest network. Requires that
 # bitcoind is already running. See the `bitcoind` target above.
 block:
-	bitcoin-cli \
-		-regtest \
-		-rpcuser=bisqdao \
-		-rpcpassword=bsq \
-		getnewaddress \
-		| xargs bitcoin-cli \
-				-regtest \
-				-rpcuser=bisqdao \
-				-rpcpassword=bsq \
-				generatetoaddress 1
+	"/mnt/c/Program Files/Bitcoin/daemon/bitcoin-cli.exe" -regtest -rpcuser=bisqdao -rpcpassword=bsq getnewaddress | sed 's/\r//' | xargs "/mnt/c/Program Files/Bitcoin/daemon/bitcoin-cli.exe" -regtest -rpcuser=bisqdao -rpcpassword=bsq generatetoaddress 1
 
 # Generate more than 1 block.
 # Instead of running `make block` 24 times,

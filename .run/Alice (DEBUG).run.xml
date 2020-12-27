@@ -1,0 +1,26 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Alice (DEBUG)" type="GradleRunConfiguration" factoryName="Gradle">
+    <ExternalSystemSettings>
+      <option name="env">
+        <map>
+          <entry key="JAVA_TOOL_OPTIONS" value="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8001" />
+        </map>
+      </option>
+      <option name="executionName" />
+      <option name="externalProjectPath" value="$PROJECT_DIR$/desktop" />
+      <option name="externalSystemIdString" value="GRADLE" />
+      <option name="scriptParameters" value="run --args='--baseCurrencyNetwork=BTC_REGTEST --useLocalhostForP2P=true --useDevPrivilegeKeys=true --nodePort=5555 --fullDaoNode=true --rpcUser=bisqdao --rpcPassword=bsq --rpcBlockNotificationPort=5122 --genesisBlockHeight=111 --genesisTxId=30af0050040befd8af25068cc697e418e09c2d8ebd8d411d2240591b9ec203cf --appDataDir=../.localnet/alice --appName=Alice'" />
+      <option name="taskDescriptions">
+        <list />
+      </option>
+      <option name="taskNames">
+        <list />
+      </option>
+      <option name="vmOptions" value="" />
+    </ExternalSystemSettings>
+    <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+    <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+    <DebugAllEnabled>true</DebugAllEnabled>
+    <method v="2" />
+  </configuration>
+</component>
